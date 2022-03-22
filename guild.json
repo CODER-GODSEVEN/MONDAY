@@ -1,0 +1,1 @@
+{"947787968930795540": {"LOG": 949603249453936691, "LOG_OPTION": [true, false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true], "CATEGORY": 949604048217210880, "JOIN": {"CHANNEL": null, "MESSAGE": "{user.mention}님이 서버에 입장하셨습니다. (기본값)"}, "EXIT": {"CHANNEL": null, "MESSAGE": "{user}님이 서버에 떠나셨습니다. (기본값)"}}}
