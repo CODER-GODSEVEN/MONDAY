@@ -167,7 +167,8 @@ class Pet(nextcord.ui.Modal):
             response += f"\nTheir pet can be recognized by this information:\n{self.description.value}"
         await interaction.send(response)
 '''
-async def check_meaning(ctx, txt, tag): 
+
+async def check_pattern(ctx, txt, tag): 
     returnValue = False
 
     with open('data.json', 'r', encoding="UTF-8") as f:
@@ -490,7 +491,7 @@ async def purge_all(ctx, txt):
 
     processOption = '' 
 
-    if await check_meaning(ctx, txt, '즉시') == True:
+    if await check_pattern(ctx, txt, '즉시') == True:
         processOption = '즉시'
 
     embed = nextcord.Embed(title='삭제', description=f'모든 메세지를 {processOption} 삭제하시겠습니까?', color=colors['MAIN']) 
@@ -580,7 +581,7 @@ async def purge(ctx, txt):
                         if int(line.index('개')) != 0:
                             amount = int(line.split('개')[0])+1
 
-            elif await check_meaning(ctx, txt, '전체') == True:
+            elif await check_pattern(ctx, txt, '전체') == True:
                 amount = 1000000
 
             else: 
@@ -620,7 +621,7 @@ async def purge(ctx, txt):
                 processOption = '' 
                 cancel = False
 
-                if await check_meaning(ctx, txt, '즉시') == True:
+                if await check_pattern(ctx, txt, '즉시') == True:
                     processOption = '즉시'
 
                 embed = nextcord.Embed(title='삭제', description=f'메세지 `{amount}`개를 {processOption} 삭제하시겠습니까?', color=colors['MAIN']) 
