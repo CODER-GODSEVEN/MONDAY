@@ -12,7 +12,7 @@ import asyncio
 options = ['환영메세지','서버 입장', '서버 퇴장', '메세지 삭제', '메세지 수정', '채널 생성', '채널 삭제', '유저 역할 변경', '유저 닉네임 변경', '역할 생성', '역할 삭제', '역할 이름 변경', '역할 색 변경', '유저 차단', '유저 차단 해제', '초대코드 생성', '초대코드 삭제', '보이스 채널 입장', '보이스 채널 퇴장']
 
 #MONDAY TOKEN 
-token = open("token.txt", "r").readline()
+token = str(open("token.txt", "r").readline())
 
 #Load Datas from json file
 with open('data.json', 'r', encoding="UTF-8") as f:
