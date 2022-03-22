@@ -1,4 +1,3 @@
-import discord
 import nextcord
 from nextcord.ext import commands
 from datetime import datetime
@@ -1767,8 +1766,13 @@ async def on_invite_delete(invite):
 @app.event
 async def on_message(message):
     if str(message.channel.type) == 'private':
-        embed = discord.Embed(title='오류', description='개인적인 대화는 곤란해요!', color=colors['RED'])
-        await message.author.send(embed=embed)  
+        embed = nextcord.Embed(title='오류', description='```개인적인 대화는 곤란해요!```', color=colors['RED'])
+        user = message.author
+        try:
+            await user.send(embed=embed)  
+        
+        except: 
+            pass
 
     else:
         if message.author.bot == False:
