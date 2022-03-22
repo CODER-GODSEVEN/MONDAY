@@ -1113,6 +1113,99 @@ async def cal_time(ctx, txt):
     print(timeValue[0]) 
     print(timeValue[1])
        
+async def reminder(ctx, txt): 
+    timescares = ['시', '시간', '분', '초'] 
+
+    time_expression = ''
+
+    for timescare in timescares: 
+        if timescare in txt: 
+
+            for line in txt.split():
+                if timescare in line: 
+
+                    time = line.split(timescare)[0] if line.split(timescare)[0] != '' else line.split(timescare)[1] 
+                    
+                    if time_expression != '': 
+                        if timescare == '전': 
+                            time_expression += '#-'
+                            
+                        elif timescare == '후' or timescare == '뒤': 
+                            time_expression += '#+' 
+
+                    if timescare == '시' or timescare == '시간':
+                        if 'h' in time_expression and '/' not in time_expression: 
+                            time_expression += f'/{time}h'                
+                        
+                        else: 
+                            time_expression += f'{time}h' 
+
+                    elif timescare == '분':
+                        if 'm' in time_expression and '/' not in time_expression: 
+                            time_expression += f'/{time}m'
+
+                        else: 
+                            time_expression += f'{time}m'
+
+                    elif timescare == '초':
+                        if 's' in time_expression and '/' not in time_expression: 
+                            time_expression += f'/{time}s' 
+
+                        else: 
+                            time_expression += f'{time}s'
+
+    print(time_expression) 
+    
+    scares = ['h', 'm', 's'] 
+
+    time = []
+    time_set = ""
+    for scare in scares:
+        if scare in time_expression:
+            time.append(int(time_expression.split(scare)[0]))
+            time_expression = time_expression.split(scare)[1]
+
+            if scare == 'h': 
+                if time_set != '':
+                    time_set += f' {time[0]}시간'
+                
+                else: 
+                    time_set += f'{time[0]}시간'
+
+            elif scare == 'm':
+                if time_set != '':
+                    time_set += f' {time[1]}분'
+                
+                else: 
+                    time_set += f'{time[1]}분'
+
+            elif scare == 's':
+                if time_set != '':
+                    time_set += f' {time[2]}초'
+                
+                else: 
+                    time_set += f'{time[2]}초'
+
+        else: 
+            time.append(0) 
+
+    hour = 0 if time[0] == 0 else time[0] 
+    minute = 0 if time[1] == 0 else time[1] 
+    second = 0 if time[2] == 0 else time[2] 
+
+    embed = nextcord.Embed(title='알람 설정', description=f'{ctx.author.mention}님! `{time_set} 후`에 알려드릴게요!', color=colors['MAIN'])
+    embed.add_field(name='알람 설정 시간', value=f'```{time_set} 후```')
+    reminder = await ctx.send(embed=embed) 
+
+    print(hour*3600+minute*60+second)
+    print(time_set)
+    await asyncio.sleep(hour*3600+minute*60+second) 
+
+    await reminder.delete()
+
+    embed = nextcord.Embed(title=f'{ctx.author.name}님의 알람', description=f'{ctx.author.mention}님! 말씀하신 `{time_set}`이 지났습니다.' if time_set[-1] != '초' else f'{ctx.author.mention}님! 말씀하신 `{time_set}`가 지났습니다.', color=colors['GREEN'])
+    await ctx.send(embed=embed)
+
 #Notification when the bot has been activated
 @app.event
 async def on_ready():
@@ -1320,7 +1413,8 @@ mappings = {"메세지청소":'purge',
             "학습현황확인":'check_learn_file', 
             "질문_단어_뜻":'find_word', 
             "질문_단어_존재유무":'check_word', 
-            "시간계산":'cal_time'}
+            "시간계산":'cal_time', 
+            "리마인더":'reminder'}
 
 #@app.command()
 #async def 테스트(ctx): 
