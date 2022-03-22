@@ -1,3 +1,4 @@
+import discord
 import nextcord
 from nextcord.ext import commands
 from datetime import datetime
@@ -12,7 +13,7 @@ import asyncio
 options = ['환영메세지','서버 입장', '서버 퇴장', '메세지 삭제', '메세지 수정', '채널 생성', '채널 삭제', '유저 역할 변경', '유저 닉네임 변경', '역할 생성', '역할 삭제', '역할 이름 변경', '역할 색 변경', '유저 차단', '유저 차단 해제', '초대코드 생성', '초대코드 삭제', '보이스 채널 입장', '보이스 채널 퇴장']
 
 #MONDAY TOKEN 
-token = 'OTQ3ODIxMTI1NzA5MjMwMDgw.Yhy1Ng.7qqR4xJcTUI-4_N2FjDDukYW6Rc'
+token = open("token.txt", "r").readline()
 
 #Load Datas from json file
 with open('data.json', 'r', encoding="UTF-8") as f:
@@ -307,7 +308,7 @@ async def cal(ctx, txt):
 
         embed = nextcord.Embed(title='계산', color=colors['GREEN']) 
         embed.add_field(name='식', value=f'```{expression}```')
-        embed.add_field(name='값', value=f'```{eval(expression)}```')
+        embed.add_field(name='결과', value=f'```{eval(expression)}```')
         await ctx.send(embed=embed)
 
 async def translate(ctx, txt): 
@@ -353,7 +354,7 @@ async def check_ping(ctx, txt):
 
 async def weather(ctx, txt):
     if '날씨' in txt: 
-        option = False
+        searchOption = False
         
         scaleList = ['도', '시', '군', '구', '동', '읍', '면', '리']
 
@@ -375,9 +376,9 @@ async def weather(ctx, txt):
             location = None
 
         if '자세히' in txt:
-            option = True
+            searchOption = True
 
-        info = option.Crawling().weather(location, option)
+        info = option.Crawling().weather(location, searchOption)
 
         embed = nextcord.Embed(title=f'{info[0]}의 날씨', color=colors['MAIN']) 
         embed.add_field(name='온도', value=f'```{info[1]}C```')
@@ -392,72 +393,72 @@ async def weather(ctx, txt):
 
 async def corona(ctx, txt): 
     if '모든' in txt or '모두' in txt or '자세히' in txt: 
-        option = 'all' 
+        Outputoption = 'all' 
         size = '자세한'
 
     elif '오늘' in txt or '투데이' in txt or '일일' in txt: 
-        option = 'today' 
+        Outputoption = 'today' 
         size = '오늘'
 
     elif '전체' in txt or '토탈' in txt or '누적' in txt: 
-        option = 'total' 
+        Outputoption = 'total' 
         size = '누적'
 
     else: 
         size = '오늘/누적'
-        option = None
+        Outputoption = None
 
-    output = option.Crawling().corona(option)
+    output = option.Crawling().corona(Outputoption)
 
     embed = nextcord.Embed(title=f'{size} 코로나 현황', description='```코로나 현황입니다.```',color=colors['MAIN']) 
     await ctx.send(embed=embed)
 
-    if option == None: 
+    if Outputoption == None: 
         day_embed = nextcord.Embed(title='오늘', color=colors['MAIN']) 
-        day_embed.add_field(name='사망자', value=f'```{output[1][0]}```')
-        day_embed.add_field(name='재원 위중증', value=f'```{output[1][1]}```')
-        day_embed.add_field(name='신규 입원', value=f'```{output[1][2]}```')
-        day_embed.add_field(name='확진자', value=f'```{output[1][3]}```')
+        day_embed.add_field(name='사망자', value=f'```{output[1][0]}명```')
+        day_embed.add_field(name='재원 위중증', value=f'```{output[1][1]}명```')
+        day_embed.add_field(name='신규 입원', value=f'```{output[1][2]}명```')
+        day_embed.add_field(name='확진자', value=f'```{output[1][3]}명```')
         await ctx.send(embed=day_embed)
 
         total_embed = nextcord.Embed(title='누적', color=colors['MAIN']) 
-        total_embed.add_field(name='사망자', value=f'```{output[0][0]}```')
-        total_embed.add_field(name='확진자', value=f'```{output[0][1]}```')
+        total_embed.add_field(name='사망자', value=f'```{output[0][0]}명```')
+        total_embed.add_field(name='확진자', value=f'```{output[0][1]}명```')
         await ctx.send(embed=total_embed)
 
-    elif option == 'today': 
+    elif Outputoption == 'today': 
         #사망, 재원 위중증, 신규 입원, 확진 
         day_embed = nextcord.Embed(title='오늘', color=colors['MAIN']) 
-        day_embed.add_field(name='사망자', value=f'```{output[0][0]}```')
-        day_embed.add_field(name='재원 위중증', value=f'```{output[0][1]}```')
-        day_embed.add_field(name='신규 입원', value=f'```{output[0][2]}```')
-        day_embed.add_field(name='확진자', value=f'```{output[0][3]}```')
+        day_embed.add_field(name='사망자', value=f'```{output[0][0]} 명```')
+        day_embed.add_field(name='재원 위중증', value=f'```{output[0][1]} 명```')
+        day_embed.add_field(name='신규 입원', value=f'```{output[0][2]} 명```')
+        day_embed.add_field(name='확진자', value=f'```{output[0][3]} 명```')
         await ctx.send(embed=day_embed)
 
-    elif option == 'total': 
+    elif Outputoption == 'total': 
         total_embed = nextcord.Embed(title='누적', color=colors['MAIN']) 
-        total_embed.add_field(name='사망자', value=f'```{output[0][0]}```')
-        total_embed.add_field(name='확진자', value=f'```{output[0][1]}```')
+        total_embed.add_field(name='사망자', value=f'```{output[0][0]} 명```')
+        total_embed.add_field(name='확진자', value=f'```{output[0][1]} 명```')
         await ctx.send(embed=total_embed)
 
-    elif option == 'all': 
+    elif Outputoption == 'all': 
         day_embed = nextcord.Embed(title='오늘', color=colors['MAIN']) 
-        day_embed.add_field(name='사망자', value=f'```{output[1][0]}```')
-        day_embed.add_field(name='재원 위중증', value=f'```{output[1][1]}```')
-        day_embed.add_field(name='신규 입원', value=f'```{output[1][2]}```')
-        day_embed.add_field(name='확진자', value=f'```{output[1][3]}```')
+        day_embed.add_field(name='사망자', value=f'```{output[1][0]} 명```')
+        day_embed.add_field(name='재원 위중증', value=f'```{output[1][1]} 명```')
+        day_embed.add_field(name='신규 입원', value=f'```{output[1][2]} 명```')
+        day_embed.add_field(name='확진자', value=f'```{output[1][3]} 명```')
         await ctx.send(embed=day_embed)
 
         day7_embed = nextcord.Embed(title='7일 평균', color=colors['MAIN']) 
-        day7_embed.add_field(name='사망자', value=f'```{output[2][0]}```')
-        day7_embed.add_field(name='재원 위중증', value=f'```{output[2][1]}```')
-        day7_embed.add_field(name='신규 입원', value=f'```{output[2][2]}```')
-        day7_embed.add_field(name='확진자', value=f'```{output[2][3]}```')
+        day7_embed.add_field(name='사망자', value=f'```{output[2][0]} 명```')
+        day7_embed.add_field(name='재원 위중증', value=f'```{output[2][1]} 명```')
+        day7_embed.add_field(name='신규 입원', value=f'```{output[2][2]} 명```')
+        day7_embed.add_field(name='확진자', value=f'```{output[2][3]} 명```')
         await ctx.send(embed=day7_embed)
 
         total_embed = nextcord.Embed(title='누적', color=colors['MAIN']) 
-        total_embed.add_field(name='사망자', value=f'```{output[0][0]}```')
-        total_embed.add_field(name='확진자', value=f'```{output[0][1]}```')
+        total_embed.add_field(name='사망자', value=f'```{output[0][0]} 명```')
+        total_embed.add_field(name='확진자', value=f'```{output[0][1]} 명```')
         await ctx.send(embed=total_embed)
 
 async def exchange(ctx, txt): 
@@ -1765,31 +1766,36 @@ async def on_invite_delete(invite):
 
 @app.event
 async def on_message(message):
-    if message.author.bot == False:
-        if str(message.guild.id) in guilds: 
-            badwords = ['시발', '씨발', '존나']
+    if str(message.channel.type) == 'private':
+        embed = discord.Embed(title='오류', description='개인적인 대화는 곤란해요!', color=colors['RED'])
+        await message.author.send(embed=embed)  
 
-            for badword in badwords:
-                if message.content.find(badword) != -1:
-                    await message.delete()
-                    await message.channel.send(f"{message.author.mention} 욕은 나쁜겁니다!")
-                    return # So that it doesn't try to delete the message again.
+    else:
+        if message.author.bot == False:
+            if str(message.guild.id) in guilds: 
+                badwords = ['시발', '씨발', '존나']
 
-            await app.process_commands(message)
+                for badword in badwords:
+                    if message.content.find(badword) != -1:
+                        await message.delete()
+                        await message.channel.send(f"{message.author.mention} 욕은 나쁜겁니다!")
+                        return # So that it doesn't try to delete the message again.
 
-        else: 
-            if '셋업' == message.content: 
                 await app.process_commands(message)
 
-            try:
-                if '먼데이' in str(message.content).split()[0]:
-                    embed = nextcord.Embed(description='시스템이 다운로드되어 있지 않은 서버입니다. 먼데이를 이용하시려면 `셋업`을 통해 활성화해주세요', color=colors['RED'])
-                    await message.channel.send(embed=embed)
+            else: 
+                if '셋업' == message.content: 
+                    await app.process_commands(message)
 
-            except IndexError: 
-                if '먼데이' == str(message.content).split()[0]:
-                    embed = nextcord.Embed(description='시스템이 다운로드되어 있지 않은 서버입니다. 먼데이를 이용하시려면 `셋업`을 통해 활성화해주세요', color=colors['RED'])
-                    await message.channel.send(embed=embed)
+                try:
+                    if '먼데이' in str(message.content).split()[0]:
+                        embed = nextcord.Embed(description='시스템이 다운로드되어 있지 않은 서버입니다. 먼데이를 이용하시려면 `셋업`을 통해 활성화해주세요', color=colors['RED'])
+                        await message.channel.send(embed=embed)
+
+                except IndexError: 
+                    if '먼데이' == str(message.content).split()[0]:
+                        embed = nextcord.Embed(description='시스템이 다운로드되어 있지 않은 서버입니다. 먼데이를 이용하시려면 `셋업`을 통해 활성화해주세요', color=colors['RED'])
+                        await message.channel.send(embed=embed)
 
 #activate
 app.run(token)
