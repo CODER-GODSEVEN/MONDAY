@@ -1414,26 +1414,77 @@ async def check_time_site(ctx, txt):
 
     time = option.Crawling().check_time_site(site)  
 
-    embed = nextcord.Embed(title=f'[사이트](<{site}>) 서버시간', color=colors['MAIN'])
+    embed = nextcord.Embed(title=f'서버시간', description=f'*[사이트]('+site+')', color=colors['MAIN'])
     embed.add_field(name='사이트', value=f'```{site}```')
-    embed.add_field(name='서버시간', value=f'{time}')
+    embed.add_field(name='서버시간', value=f'```{time.split("일")[0]}일```', inline=False)
+
+    sec = int(time.split("일")[1][1:].split("분")[1].split('초')[0][1:])
+    min = int(time.split("일")[1][1:].split("시")[1].split('분')[0])
+    hour = int(time.split('일')[1][1:].split('시')[0])
+
+    if str(sec) == '00': 
+        sec = 0 
+
+    elif str(sec)[0] == '0': 
+        sec = sec[1:]
+
+    hourTime = f'{hour}시 {min}분 {sec}초'
+    dateTime = f'{time.split("일")[0]}일'
+
+    #hourTime = f'{time.split("일")[1][1:].split("분")[0]}분 {sec}초'
+    #time = f'{time.split("일")[0]}일 {hourTime}'
+
+    time = f'{dateTime} {hourTime}'
+
+    print(time)
+
+    embed.add_field(name='서버날짜', value=f'```{dateTime}```', inline=False)
     clock = await ctx.send(embed=embed)
 
     await asyncio.sleep(1) 
 
     for x in range(0, 60*5):
-        embed = nextcord.Embed(title=f'서버시간', description=f'[사이트]'+site ,color=colors['MAIN'])
-        sec = int(time.split('분')[1].split('초')[0]) + 1 
-        timeStamp = time.split('분')[0]
-        
-        if sec == 60: 
-            min = int(time.split('시')[1].split('분')[0]) + 1
-            timeStamp = f"{time.split('시')[1]}시 {min}분"
+        embed = nextcord.Embed(title=f'서버시간', description=f'*[사이트]('+site+')*의 시간은 다음과 같습니다.' ,color=colors['MAIN'])
+
+        sec = int(hourTime.split('분')[1].split('초')[0]) + 1
+
+        if int(sec) == 60: 
+            #초 60초 분 
+            #분 60분 시간 
             sec = 0 
+            min += 1 
 
-        time = f'{timeStamp}분 {sec}초'
+        if int(min) == 60: 
+            min = 0 
+            hour += 1
+            
+        hourTime = f'{hour}시 {min}분 {sec}초'
+        dateTime = f'{dateTime}'
+        #sec = int(time.split('분')[1].split('초')[0]) + 1 
+        #print(sec)
+        #print(time.split('일')[1][1:])
+        
+        #timeStamp = time.split('일')[1][1:].split('분')[0]
 
-        embed.add_field(name='서버시간', value=f'{time}', inline=False)
+        #print(time.split('일')[1:])
+        #print('timeStamp', timeStamp)
+        
+        #if sec == 60: 
+        #    print(sec)
+        #    min = int(time.split('시')[1].split('분')[0]) + 1
+        #    hour = int(time.split('시')[0].split('분')[0]) + 1
+        #    timeStamp = f"{time.split('일')[1:].split('시')[0]}시 {min}"
+        #    sec = 0 
+
+            
+
+        #time = f'{time.split("시")[0]}시 {timeStamp}분 {sec}초'
+        
+        #print(time)
+
+        embed.add_field(name='사이트', value=f'```{site}```')
+        embed.add_field(name='서버시간', value=f'```{dateTime}```', inline=False)
+        embed.add_field(name='서버날짜', value=f'```{hourTime}```', inline=False)
         await asyncio.sleep(1) 
         await clock.edit(embed=embed)
 
