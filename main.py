@@ -1153,8 +1153,6 @@ async def reminder(ctx, txt):
 
                         else: 
                             time_expression += f'{time}s'
-
-    print(time_expression) 
     
     scares = ['h', 'm', 's'] 
 
@@ -1197,8 +1195,6 @@ async def reminder(ctx, txt):
     embed.add_field(name='알람 설정 시간', value=f'```{time_set} 후```')
     reminder = await ctx.send(embed=embed) 
 
-    print(hour*3600+minute*60+second)
-    print(time_set)
     await asyncio.sleep(hour*3600+minute*60+second) 
 
     await reminder.delete()
@@ -1394,6 +1390,53 @@ async def get_guild_info(ctx, txt, guild):
         embed.set_image(url=guild.banner)
     await ctx.send(embed=embed) 
 
+async def check_time_site(ctx, txt): 
+    sitePointers = ['https', 'http', 'www'] 
+
+    for sitePointer in sitePointers: 
+        if sitePointer in sitePointers: 
+            break
+
+    index = txt.find(sitePointer)
+
+    site = ''
+
+    for x in range(index, len(txt)):
+        if txt[x] != ' ': 
+            site += f'{txt[x]}'
+
+        elif txt[x] != '': 
+            site += f'{txt[x]}'
+
+
+    #파인드로 바꾸고 여기서 나온 인덱스 값을 시작으로 띄여쓰기 나올 대까지 사이트 주소로 간주
+    #여백이 나오면 사이트 끝 간주
+
+    time = option.Crawling().check_time_site(site)  
+
+    embed = nextcord.Embed(title=f'[사이트](<{site}>) 서버시간', color=colors['MAIN'])
+    embed.add_field(name='사이트', value=f'```{site}```')
+    embed.add_field(name='서버시간', value=f'{time}')
+    clock = await ctx.send(embed=embed)
+
+    await asyncio.sleep(1) 
+
+    for x in range(0, 60*5):
+        embed = nextcord.Embed(title=f'서버시간', description=f'[사이트]'+site ,color=colors['MAIN'])
+        sec = int(time.split('분')[1].split('초')[0]) + 1 
+        timeStamp = time.split('분')[0]
+        
+        if sec == 60: 
+            min = int(time.split('시')[1].split('분')[0]) + 1
+            timeStamp = f"{time.split('시')[1]}시 {min}분"
+            sec = 0 
+
+        time = f'{timeStamp}분 {sec}초'
+
+        embed.add_field(name='서버시간', value=f'{time}', inline=False)
+        await asyncio.sleep(1) 
+        await clock.edit(embed=embed)
+
 #Func for some has script
 mappings = {"메세지청소":'purge',
             "메세지청소_모두":'purge',
@@ -1414,7 +1457,8 @@ mappings = {"메세지청소":'purge',
             "질문_단어_뜻":'find_word', 
             "질문_단어_존재유무":'check_word', 
             "시간계산":'cal_time', 
-            "리마인더":'reminder'}
+            "리마인더":'reminder', 
+            "사이트시간":'check_time_site'}
 
 #@app.command()
 #async def 테스트(ctx): 

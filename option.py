@@ -1,7 +1,10 @@
+from datetime import datetime
 from unittest import result
 import requests
 import urllib3
+import urllib
 from bs4 import BeautifulSoup
+import time
 import numpy as np
 
 
@@ -252,3 +255,14 @@ class Crawling:
             #print(f'또한, 습도는 {sumList[0]}이고, 강수확률은 {sumList[1]}이며, 바람속도는 {sumList[2]}입니다.')
 
         return outPut
+
+    def check_time_site(self, site=None): 
+        if site != None:
+            date = urllib.request.urlopen('http://www.google.com').headers['Date']
+
+        else: 
+            date = urllib.request.urlopen('http://www.naver.com').headers['Date']
+
+        siteTime = datetime.strptime(date, '%a, %d %b %Y %H:%M:%S %Z').strftime('%Y년 %m월 %d일 %H시 %M분 %S초')
+
+        return siteTime
